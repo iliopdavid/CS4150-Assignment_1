@@ -49,7 +49,7 @@ g++ tracer -o tracer.cpp
 ### Execution
 Run the program by using the following command:
 ```bash
-./tracer /bin/ls
+sudo ./tracer /bin/ls
 ```
 The program will:
 - Execute `/bin/ls`.
