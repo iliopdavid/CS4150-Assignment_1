@@ -52,7 +52,7 @@ g++ tracer -o tracer.cpp
 
 ### Execution
 Run the program by using the following command:
-For the tracer:
+#### For the tracer:
   ```bash
   sudo ./tracer /bin/ls
   ```
@@ -63,7 +63,7 @@ For the tracer:
 
 The file contains the syscalls codes and not the commands(i.e. code=0, command=read). Here is the [table](https://filippo.io/linux-syscall-table/) with the code-commands matches.
 
-For the sandbox:
+#### For the sandbox:
   ```bash
   LD_PRELOAD=./sandbox.so /bin/ls
   ```
