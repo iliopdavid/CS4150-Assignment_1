@@ -30,33 +30,47 @@ sudo apt install gdb
 ---
 
 ## How It Works
-
+### Tracer
 1. The program forks a child process to run the target application.
 2. The parent process attaches to the child process using `ptrace`.
 3. Each time the child process invokes a system call, the parent intercepts it and logs the system call number.
 4. Once the target program completes execution, all unique system call numbers are saved to `syscalls.txt`.
+### Sandbox
+1. The program loads the allowed syscalls from the `syscalls.txt`.
+2. Then using `sigaction` we create a custom handler for the `System calls`.
+3. In the handler if we receive a system call that is not in our *allowed_syscalls* array we terminate the process, otherwise we emulate the system call.
 
 ---
 
 ## Usage
 
 ### Compilation
-Compile the program using a C++ compiler (beinf in the folder where the ccp file is):
+Compile the program using a C++ compiler (being in the folder where the ccp file is):
 ```bash
 g++ tracer -o tracer.cpp
 ```
 
 ### Execution
 Run the program by using the following command:
-```bash
-sudo ./tracer /bin/ls
-```
-The program will:
-- Execute `/bin/ls`.
-- Log all unique system call numbers made by `/bin/ls`.
-- Save the results to `/syscalls.txt`
+For the tracer:
+  ```bash
+  sudo ./tracer /bin/ls
+  ```
+  The program will:
+  - Execute `/bin/ls`.
+  - Log all unique system call numbers made by `/bin/ls`.
+  - Save the results to `./syscalls.txt`
 
 The file contains the syscalls codes and not the commands(i.e. code=0, command=read). Here is the [table](https://filippo.io/linux-syscall-table/) with the code-commands matches.
+
+For the sandbox:
+  ```bash
+  LD_PRELOAD=./sandbox.so /bin/ls
+  ```
+  The program will:
+  - Execute `/bin/ls`.
+  - Check all system call numbers made by `/bin/ls`.
+  - Kill the process if the program tries to execute some system calls that are not present in the `./syscalls.txt`
 
 ### Output
 The output file I have in the repository is the one after running the tracer for times.
